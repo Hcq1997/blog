@@ -1,0 +1,180 @@
+{{ template "base.tmpl" . }}
+{{ define "content" }}
+
+<!--导航-->
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h2 class="ui teal header item">{{ .Username }}的个人博客</h2>
+      <a href="/{{ .Username }}/index" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+      <a href="/{{ .Username }}/type" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+      <a href="/{{ .Username }}/archives" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+      <a href="/{{ .Username }}/management" class="m-item item m-mobile-hide"><i class="mini info icon"></i>管理</a>
+
+      <div class="right m-item m-mobile-hide menu">
+        <div class="ui dropdown item">
+          <div class="text">
+            <img class="ui avatar image" src="https://unsplash.it/100/100?image=1005">
+            {{ .Visitor }}
+          </div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" class="item">注销</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+  <!--中间内容-->
+  <div id="waypoint" class="m-container-small m-padded-tb-big animated fadeIn">
+    <div class="ui container">
+      <div class="ui top attached segment">
+        <div class="ui horizontal link list">
+          <div class="item">
+            <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+            <div class="content"><a href="#" class="header">{{ .Username }}</a></div>
+          </div>
+          <div class="item">
+            <i class="calendar icon"></i> <span>{{ .BlogContent.UpdateTime }}</span>
+          </div>
+          <div class="item">
+            <i class="eye icon"></i> <span>{{ .BlogContent.View }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="ui attached segment">
+        <!--图片区域-->
+        <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui fluid rounded image">
+      </div>
+      <div class="ui  attached padded segment">
+        <!--内容-->
+        <div class="ui right aligned basic segment">
+          <div class="ui orange basic label">{{ .BlogContent.Flag }}</div>
+        </div>
+
+        <h2 class="ui center aligned header">{{ .BlogContent.Tittle }}</h2>
+        <br>
+        <!--中间主要内容部分-->
+        <div id="content" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large" th:utext="${blog.content}">
+
+        </div>
+
+        <!--标签-->
+        <div class="m-padded-lr-responsive">
+          <div class="ui basic teal left pointing label">{{ .BlogContent.TypeName }}</div>
+        </div>
+
+      </div>
+
+      <div class="ui attached positive message">
+        <!--博客信息-->
+        <div class="ui middle aligned grid">
+          <div class="eleven wide column">
+            <ui class="list">
+              <li>作者：<span th:text="${blog.user.nickname}">李仁密</span><a href="#" th:href="@{/about}" target="_blank">（联系作者）</a></li>
+              <li>发表时间：<span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd HH:mm')}">2017-10-02 09:08</span></li>
+              <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
+              <li>公众号转载：请在文末添加作者公众号二维码</li>
+            </ui>
+          </div>
+          <div class="five wide column">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
+    <div class="ui vertical icon buttons ">
+      <button type="button" class="ui toc teal button" >目录</button>
+      <a href="#comment-container" class="ui teal button" >留言</a>
+      <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+      <div id="toTop-button" class="ui icon button" ><i class="chevron up icon"></i></div>
+    </div>
+  </div>
+
+  <div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
+    <ol class="js-toc">
+
+    </ol>
+  </div>
+
+  <div id="qrcode" class="ui wechat-qr flowing popup transition hidden "style="width: 130px !important;">
+    <!--<img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">-->
+  </div>
+
+
+
+  <br>
+  <br>
+
+
+<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  
+<script src="/res/lib/prism/prism.js"></script>
+<script src="/res/lib/tocbot/tocbot.min.js"></script>
+<script src="/res/lib/qrcode/qrcode.min.js"></script>
+<script src="/res/lib/waypoints/jquery.waypoints.min.js"></script>
+  <!--/*/</th:block>/*/-->
+
+
+  <script inline="javascript">
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3',
+    });
+
+    $('.toc.button').popup({
+      popup : $('.toc-container.popup'),
+      on : 'click',
+      position: 'left center'
+    });
+
+    $('.wechat').popup({
+      popup : $('.wechat-qr'),
+      position: 'left center'
+    });
+
+    var serurl = /*[[#{blog.serurl}]]*/"127.0.0.1:8080";
+    var url = /*[[@{/blog/{id}(id=${blog.id})}]]*/"";
+    var qrcode = new QRCode("qrcode", {
+      text: serurl+url,
+      width: 110,
+      height: 110,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+    });
+    
+    $('#toTop-button').click(function () {
+      $(window).scrollTo(0,500);
+    });
+
+
+    var waypoint = new Waypoint({
+      element: document.getElementById('waypoint'),
+      handler: function(direction) {
+        if (direction == 'down') {
+          $('#toolbar').show(100);
+        } else {
+          $('#toolbar').hide(500);
+        }
+        console.log('Scrolled to waypoint!  ' + direction);
+      }
+    })
+
+    
+  </script>
+
+{{ end }}

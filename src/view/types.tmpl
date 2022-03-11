@@ -1,0 +1,114 @@
+{{ template "base.tmpl" .}}
+{{ define "content" }}
+
+  <!--导航-->
+  <nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui teal header item">{{ .Username }}的个人博客</h2>
+        <a href="/{{ .Username }}/index" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+        <a href="/{{ .Username }}/type" class="active m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <a href="/{{ .Username }}/archives" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+        <a href="/{{ .Username }}/management" class="m-item item m-mobile-hide"><i class="mini info icon"></i>管理</a>
+
+        <div class="right m-item m-mobile-hide menu">
+          <div class="ui dropdown  item">
+            <div class="text">
+              <img class="ui avatar image" src="https://unsplash.it/100/100?image=1005">
+              {{ .Visitor }}
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a href="#" class="item">注销</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+
+  <!--中间内容-->
+  <div  class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+      <!--header-->
+      <div class="ui top attached segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 class="ui teal header">分类</h3>
+          </div>
+          <div class="right aligned column">
+            共 <h2 class="ui orange header m-inline-block m-text-thin"> {{ .Count }} </h2> 个
+          </div>
+        </div>
+      </div>
+
+      <div class="ui attached segment m-padded-tb-large">
+        {{ range $ind, $val := .Types }}
+        <div class="ui labeled button m-margin-tb-tiny">
+          <a href="#" class="ui basic teal button">{{ $val.TypeName }}</a>
+          <div class="ui basic teal left pointing label">{{ $val.BlogCount }}</div>
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="ui top attached teal segment">
+        {{ $t := .CurrentType }}
+        {{ $un := .Username }}
+        {{ range $ind, $val := .SelectedBlogs }}
+
+        <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
+          <div class="ui mobile reversed stackable grid">
+            <div class="eleven wide column">
+              <h3 class="ui header">{{ $val.Tittle }}</h3>
+              <p class="m-text">{{ $val.Content }}</p>
+              <div class="ui stackable grid">
+                <div class="eleven wide column">
+                  <div class="ui mini horizontal link list">
+                    <div class="item">
+                      <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                      <div class="content"><a href="#" class="header">{{ $un }}</a></div>
+                    </div>
+                    <div class="item">
+                      <i class="calendar icon"></i> {{ $val.UpdateTime }}
+                    </div>
+                    <div class="item">
+                      <i class="eye icon"></i> {{ $val.View }}
+                    </div>
+                  </div>
+                </div>
+                <div class="right aligned five wide column">
+                  <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">{{ $t }}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="five wide column">
+              <a href="#" target="_blank">
+                <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        {{ end }}
+      </div>
+
+      <div class="ui bottom attached segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <a href="#" class="ui mini teal basic button">上一页</a>
+          </div>
+          <div class="right aligned column">
+            <a href="#" class="ui mini teal basic button">下一页</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{{ end }}

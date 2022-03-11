@@ -1,0 +1,73 @@
+{{ template "base.tmpl" . }}
+{{ define "content" }}
+
+  <!--导航-->
+  <nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui teal header item">{{ .Username }}的个人博客</h2>
+        <a href="/{{ .Username }}/index" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+        <a href="/{{ .Username }}/type" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <a href="/{{ .Username }}/archives" class="active m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+        <a href="/{{ .Username }}/management" class="m-item item m-mobile-hide"><i class="mini info icon"></i>管理</a>
+
+        <div class="right m-item m-mobile-hide menu">
+          <div class="ui dropdown item">
+            <div class="text">
+              <img class="ui avatar image" src="https://unsplash.it/100/100?image=1005">
+              {{ .Visitor }}
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a href="#" class="item">注销</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+
+  <!--中间内容-->
+  <div  class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+      <!--header-->
+      <div class="ui top attached padded segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 class="ui teal header">归档</h3>
+          </div>
+          <div class="right aligned column">
+            共 <h2 class="ui orange header m-inline-block m-text-thin"> {{ .TotalBlog }} </h2> 篇博客
+          </div>
+        </div>
+      </div>
+
+      {{ range $ind, $val := .Blogs }}
+
+      <h3 class="ui center aligned header">{{ $val.Year }}</h3>
+      <div class="ui fluid vertical menu">
+
+        {{ range $ix, $v := $val.Blogs }}
+
+        <a href="#" target="_blank" class="item">
+          <span>
+            <i class="mini teal circle icon"></i>{{ $v.Tittle }}
+            <div class="ui teal basic left pointing label m-padded-mini ">{{ $v.TypeName }}</div>
+          </span>
+          <div class="ui orange basic left pointing label m-padded-mini ">{{ $v.CreateTime }}</div>
+        </a>
+
+        {{ end }}
+
+      </div>
+
+      {{ end }}
+
+
+    </div>
+  </div>
+  {{ end }}
